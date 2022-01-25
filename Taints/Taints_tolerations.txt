@@ -1,0 +1,25 @@
+Taints & Toleration
+"Get the node name by running the command:
+kubectl get nodes >> NODENAME"
+"To check if the node is already tainted
+kubectl describe node NODENAME # NODENAMEofSlave=ip-172-31-31-35"
+"To check if tany POD is already schedules. If the POD scheduled in a node, It wont be affected if we Taint now. But from next time Taint will work
+kubectl get pods -owide"
+"Lets Taint the node:
+kubectl taint node NODENAME key=value:NoSchedule
+>> Node is tainted"
+"To check if the node is tainted now 
+kubectl describe node NODENAME # NODENAMEofSlave=ip-172-31-31-35"
+git clone https://github.com/devops-parth/k8sefs.git
+"nano taintpod.yaml >>EDIT>
+metadata:
+  name: nginx 
+  image: nginx
+tolerations:
+  - key: ""key""
+    operator: ""Equal""
+    value: ""value"" 
+    effect: ""NoSchedule"""
+kubectl create -f taintpod.yaml 
+"To check if the POD got tainted accordingly:
+kubectl get pods -owide"

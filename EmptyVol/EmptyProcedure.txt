@@ -1,0 +1,14 @@
+EmptyDir Volume (It lost with POD)
+git clone https://github.com/devops-parth/k8sefs.git
+nano emptydir.yaml >>EDIT>
+kubectl create -f emptydir.yaml / kubectl apply -f emptydir.yaml #both are same
+kubectl describe pod PODNAME >>> Image
+"Exec into one of the containers in the pod, c1, check the volume mount and generate some data:
+kubectl exec -it sharevol -c c1 -- bash
+mount | grep xchange
+echo 'some data' > /tmp/xchange/data"
+kubectl logs PODNAME
+"now exec into c2, the second container running in the pod, we can see the volume mounted at /tmp/data and are able to read the data created in the previous step:
+kubectl exec -it sharevol -c c2 -- bash
+mount | grep /tmp/data 
+cat /tmp/data/data >> some data"

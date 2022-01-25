@@ -1,0 +1,36 @@
+PERSISTENT VOLUME
+git clone https://github.com/devops-parth/k8sefs.git
+kubectl create -f rbac.yaml / kubectl apply -f rbac.yaml #both are same
+"nano manifest.yaml 
+>EDIT>
+file.system.id: fs-e4413b65 #Data (efs file system id from AWS)
+aws.region: us-east-1 #Data
+server: fs-e4413b65.efs.us-east-1.amazonaws.com #Volumes
+name: aws-efs #metadata
+ReadWriteMany #or ReadOnly ReadMany
+storage: 1Mi to 1Gi #resources"
+kubectl create -f manifest.yaml
+kubectl get pvc #To check efs status from Pending to Bound
+kubectl get pods #to list the running POD and PODName #Only 1 POD: efs-provisioner
+"Creating a deployment calling the claims created and volume:
+nano per_vol_claim.yaml
+>EDIT>
+    volumes:
+    - name: mypd
+      persistentVolumeClaim: 
+        claimName: efs
+    volumeMounts:
+      - name: mypd
+        mountPath: ""/tmp/persistent"""
+kubectl create -f per_vol_claim.yaml / kubectl apply -f per_vol_claim.yaml
+kubectl get pods #2 pods running efs-provisioner and pv-deploy #Also the POD name for exec purpose
+"Now we will enter a PO to create some data on Persistant Volume:
+kubectl exec -it PODNAME -- bash"
+touch /tmp/persistent/data
+ls /tmp/persistent >> data
+Ctrl + D >> Exit
+kubectl delete pod PODNAME
+kubectl get pods #2 pods running efs-provisioner and new pv-deploy name #new Deployment will be created automatically
+"Now we will enter to newlr auto-created POD to check data on Persistant Volume:
+kubectl exec -it PODNAME -- bash
+ls /tmp/persistent >> data"

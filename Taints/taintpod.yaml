@@ -1,0 +1,16 @@
+apiVersion: vi
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent 
+  tolerations:
+  - key: "key"
+    operator: "Equal"
+    value: "value" 
+    effect: "NoSchedule"
